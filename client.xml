@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+
+<user>
+	<url>jdbc:mysql://localhost:3306/books</url>
+	<username>client</username>
+	<password>client</password>
+</user>
