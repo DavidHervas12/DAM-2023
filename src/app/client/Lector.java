@@ -33,6 +33,9 @@ public class Lector implements Runnable {
 			System.out.println("Benvingut, ya pots escriure y rebre missatges, distruta!!");
 			while (conectat) {
 				String missatgeServidor = br.readLine();
+				if (missatgeServidor.equals("exit")) {
+					conectat = false;
+				}
 				System.out.println(missatgeServidor);
 			}
 

@@ -57,7 +57,6 @@ public class Peticio implements Runnable {
 			e.printStackTrace();
 		} finally {
 			if (conectat) {
-				conexions.remove(this);
 				System.out.println("SERVER >> Conexio finalitzada.");
 			}
 		}
@@ -141,6 +140,9 @@ public class Peticio implements Runnable {
 			susurro(user, missatge);
 		} else if (missatge.equals("exit")) {
 			conectat = false;
+			conexions.remove(this);
+			writer.println("exit");
+			writer.flush();
 		} else {
 			enviarATots(missatge);
 			System.out.println("Enviant Missatges");
