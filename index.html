@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Formulari</title>
+  </head>
+  <body>
+    <input type="search" id="search" />
+    <button type="submit" id="boton-submit">Enviar</button>
+    <button type="submit" id="boton-record">Ver Historial</button>
+    <div id="container"></div>
+  </body>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script>
+    const handleOnClickSubmit = () => {
+      const input = document.getElementById("search");
+      axios
+        .get(
+          `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q=${input.value}&maxResults=3&key=AIzaSyBV_6gVqPQFrfIqy6pxwofR1tdqD7JDrs8`
+        )
+        .then((response) => {
+          generateVideos(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    };
+    const generateVideos = (data) => {
+      const container = document.getElementById("container");
+      container.innerHTML = "";
+      console.log(data);
+      data.items.map((elem, index) => {
+        const video = document.createElement("div");
+
+        video.innerHTML = `
+      <div>
+        <p>${elem.snippet.channelTitle}</p>
+        <p>${elem.snippet.title}</p>
+        <p>${elem.snippet.description}</p>
+        <a id='video-${index}' href="https://www.youtube.com/watch?v=${elem.id.videoId}" target="_blank">
+          <img src="${elem.snippet.thumbnails.medium.url}" alt="Video Thumbnail">
+        </a>
+        <p>${elem.snippet.publishTime}</p>
+      </div>
+    `;
+
+        container.appendChild(video);
+        const link = document.getElementById(`video-${index}`);
+        link.addEventListener("click", () => openVideo(elem));
+      });
+    };
+
+    const openVideo = (data) => {
+      $.ajax({
+        type: "POST",
+        url: "server.php",
+        data: { data: JSON.stringify(data) },
+        success: function (response) {
+          console.log(response);
+        },
+        error: function () {
+          console.log("Error");
+        },
+      });
+    };
+
+    const handleOnClickRecord = () => {
+      window.location.href = "record.html";
+    };
+
+    const botonSubmit = document.getElementById("boton-submit");
+    botonSubmit.addEventListener("click", handleOnClickSubmit);
+    const botonRecord = document.getElementById("boton-record");
+    botonRecord.addEventListener("click", handleOnClickRecord);
+  </script>
+</html>
