@@ -1,0 +1,9 @@
+body{
+    background-color: rgb(142, 178, 255);
+}
+
+table tr{
+    background-color: white;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}

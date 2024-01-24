@@ -4,12 +4,27 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Formulari</title>
+    <link rel="stylesheet" href="style_index.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+      rel="stylesheet"
+    />
   </head>
   <body>
-    <input type="search" id="search" />
-    <button type="submit" id="boton-submit">Enviar</button>
-    <button type="submit" id="boton-record">Ver Historial</button>
-    <div id="container"></div>
+    <div class="menu">
+      <input type="search" id="search" />
+      <button type="submit" id="boton-submit">
+        <span class="material-symbols-outlined">search</span>
+      </button>
+      <button type="submit" id="boton-record">
+        <span class="material-symbols-outlined">lists</span>
+      </button>
+    </div>
+    <div class="container">
+      <!-- <span class="material-symbols-outlined size-100" id="prevPagButton">navigate_before</span> -->
+      <div id="videos"></div>
+      <!-- <span class="material-symbols-outlined size-100" id="nextPagButton">navigate_next</span> -->
+    </div>
   </body>
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -18,7 +33,7 @@
       const input = document.getElementById("search");
       axios
         .get(
-          `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q=${input.value}&maxResults=3&key=AIzaSyBV_6gVqPQFrfIqy6pxwofR1tdqD7JDrs8`
+          `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q=${input.value}&maxResults=12&key=AIzaSyBV_6gVqPQFrfIqy6pxwofR1tdqD7JDrs8`
         )
         .then((response) => {
           generateVideos(response.data);
@@ -28,25 +43,24 @@
         });
     };
     const generateVideos = (data) => {
-      const container = document.getElementById("container");
-      container.innerHTML = "";
+      const videos = document.getElementById("videos");
+      videos.innerHTML = "";
       console.log(data);
       data.items.map((elem, index) => {
         const video = document.createElement("div");
+        video.classList.add("video");
 
         video.innerHTML = `
       <div>
-        <p>${elem.snippet.channelTitle}</p>
-        <p>${elem.snippet.title}</p>
-        <p>${elem.snippet.description}</p>
         <a id='video-${index}' href="https://www.youtube.com/watch?v=${elem.id.videoId}" target="_blank">
           <img src="${elem.snippet.thumbnails.medium.url}" alt="Video Thumbnail">
-        </a>
-        <p>${elem.snippet.publishTime}</p>
+          </a>
+          <p>${elem.snippet.title}</p>
+          <p>${elem.snippet.channelTitle}</p>
       </div>
     `;
 
-        container.appendChild(video);
+        videos.appendChild(video);
         const link = document.getElementById(`video-${index}`);
         link.addEventListener("click", () => openVideo(elem));
       });

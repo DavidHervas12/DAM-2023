@@ -3,12 +3,12 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     if (isset($_POST["data"])) {
         $data = $_POST['data'];
         $videoInfo = json_decode($data, true);
-        $channelTitle = $videoInfo['snippet']['channelTitle'];
+        $thumbnail = $videoInfo["snippet"]["thumbnails"]["default"]["url"];
         $title = $videoInfo['snippet']['title'];
-        $description = $videoInfo['snippet']['description'];
+        $channelTitle = $videoInfo['snippet']['channelTitle'];
         $videoId = $videoInfo["id"]["videoId"];
-        $imageUrl = $videoInfo["snippet"]["thumbnails"]["medium"]["url"];
-        $publishTime = $videoInfo['snippet']['publishTime'];
+        $link = "https://www.youtube.com/watch?v=" . $videoId;
+        $timestamp = date("Y-m-d H:i:s");
 
         $servidor = "localhost";
         $usuario = "root";
@@ -20,10 +20,10 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
             die("Error en la conexión a MySQL: " . mysqli_connect_error());
         }
 
-        $sql = "INSERT INTO record (title, channel, description, videoId, imageUrl, publishTime) VALUES (?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO record (thumbnail, title, channel, link, time_stamp) VALUES (?, ?, ?, ?, ?)";
         $stmt = $conexion->prepare($sql);
 
-        $stmt->bind_param("ssssss", $title, $channelTitle, $description, $videoId, $imageUrl, $publishTime);
+        $stmt->bind_param("sssss", $thumbnail, $title, $channelTitle,  $link, $timestamp);
 
         if ($stmt->execute()) {
             echo "Registro insertado correctamente.";
@@ -46,16 +46,24 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         die("Conexión fallida: " . $conexion->connect_error);
     }
 
-    $sql = "SELECT id, nombre, email FROM usuarios";
+    if ($conexion->connect_error) {
+        die("Conexión fallida: " . $conexion->connect_error);
+    }
+
+    $sql = "SELECT thumbnail, title, channel, link, time_stamp FROM record";
     $resultado = $conexion->query($sql);
 
-    $usuarios = array();
+    if ($resultado === false) {
+        die("Error en la consulta: " . $conexion->error);
+    }
+
+    $record = array();
     while ($fila = $resultado->fetch_assoc()) {
-        $usuarios[] = $fila;
+        $record[] = $fila;
     }
 
     header('Content-Type: application/json');
-    echo json_encode($usuarios);
+    echo json_encode($record);
 
     $conexion->close();
 }

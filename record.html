@@ -1,36 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
-<body>
+    <link rel="stylesheet" href="style_record.css">
+  </head>
+  <body>
     <button type="submit" id="boton-searcher">Volver</button>
-    <!-- Representar el historial de alguna forma -->
-    <table><tr><th>Title</th><th>Channel</th><th>Description</th><th></th><th></th></tr></table>
-</body>
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script>
-        // Función para realizar una solicitud AJAX
-        // function obtenerDatos() {
-        //     fetch('servidor.php')
-        //         .then(response => response.json())
-        //         .then(usuarios => {
-        //             // Representar los datos en la página
-        //             var listaUsuarios = document.getElementById("lista-usuarios");
-        //             usuarios.forEach(usuario => {
-        //                 var item = document.createElement("li");
-        //                 item.textContent = `ID: ${usuario.id}, Nombre: ${usuario.nombre}, Email: ${usuario.email}`;
-        //                 listaUsuarios.appendChild(item);
-        //             });
-        //         })
-        //         .catch(error => console.error('Error:', error));
-        // }
+    <h1></h1>
+    <table id="table-record">
+    </table>
+  </body>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script>
+    const obtenerDatos = () => {
+      fetch("server.php")
+        .then((response) => response.json())
+        .then((record) => {
+          console.log(record);
+          const table = document.getElementById("table-record");
+          record.map((row, index) => {
+            const newRow = table.insertRow();
+            const thumbnailCell = newRow.insertCell(0);
+            const titleCell = newRow.insertCell(1);
+            const channelCell = newRow.insertCell(2);
+            const linkCell = newRow.insertCell(3);
+            const timestampCell = newRow.insertCell(4);
 
-        // // Llamar a la función al cargar la página
-        // window.onload = obtenerDatos;;
-    </script>
-</script>
+            thumbnailCell.innerHTML = `<img src='${row.thumbnail}' />`;
+            titleCell.textContent = row.title;
+            channelCell.textContent = row.channel;
+            linkCell.textContent = row.link;
+            timestampCell.textContent = row.time_stamp;
+          });
+        })
+        .catch((error) => console.error("Error:", error));
+    };
+
+    window.onload = obtenerDatos();
+  </script>
 </html>
