@@ -37,7 +37,7 @@
       // Realizo una petición get a la api de youtube (necesario registrarse y obtener una api key).
       axios
         .get(
-          `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q=${input.value}&maxResults=12&key=AIzaSyBV_6gVqPQFrfIqy6pxwofR1tdqD7JDrs8`
+          `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q=${input.value}&maxResults=12&key=introducirtuapykey`
         )
         .then((response) => {
           generateVideos(response.data);
