@@ -1,4 +1,5 @@
 <?php
+// Compruebo si es una petición get o post.
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
     if (isset($_POST["data"])) {
         $data = $_POST['data'];
@@ -8,6 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         $channelTitle = $videoInfo['snippet']['channelTitle'];
         $videoId = $videoInfo["id"]["videoId"];
         $link = "https://www.youtube.com/watch?v=" . $videoId;
+        // Genero el timestamp del momento en el que se ha visualizado el vídeo.
         $timestamp = date("Y-m-d H:i:s");
 
         $servidor = "localhost";
@@ -20,10 +22,11 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
             die("Error en la conexión a MySQL: " . mysqli_connect_error());
         }
 
+        // Utilizo parámetros para evitar posibles inyecciones sql
         $sql = "INSERT INTO record (thumbnail, title, channel, link, time_stamp) VALUES (?, ?, ?, ?, ?)";
         $stmt = $conexion->prepare($sql);
 
-        $stmt->bind_param("sssss", $thumbnail, $title, $channelTitle,  $link, $timestamp);
+        $stmt->bind_param("sssss", $thumbnail, $title, $channelTitle, $link, $timestamp);
 
         if ($stmt->execute()) {
             echo "Registro insertado correctamente.";
@@ -50,7 +53,8 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         die("Conexión fallida: " . $conexion->connect_error);
     }
 
-    $sql = "SELECT thumbnail, title, channel, link, time_stamp FROM record";
+    // Hago la petición select de esta manera para que empiece por el último vídeo visualizado.
+    $sql = "SELECT thumbnail, title, channel, link, time_stamp FROM record ORDER BY time_stamp DESC";
     $resultado = $conexion->query($sql);
 
     if ($resultado === false) {

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Formulari</title>
+    <title>Inicio</title>
     <link rel="stylesheet" href="style_index.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
@@ -13,14 +13,15 @@
   <body>
     <div class="menu">
       <input type="search" id="search" />
-      <button type="submit" id="boton-submit">
+      <button type="submit" id="button-search">
         <span class="material-symbols-outlined">search</span>
       </button>
-      <button type="submit" id="boton-record">
+      <button type="submit" id="button-record">
         <span class="material-symbols-outlined">lists</span>
       </button>
     </div>
     <div class="container">
+      <!-- Iba a poner paginación, pero como la api está limitada a una cuota diaria, se acababa muy rápido, así que he decidido no ponerlo. -->
       <!-- <span class="material-symbols-outlined size-100" id="prevPagButton">navigate_before</span> -->
       <div id="videos"></div>
       <!-- <span class="material-symbols-outlined size-100" id="nextPagButton">navigate_next</span> -->
@@ -29,8 +30,11 @@
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script>
-    const handleOnClickSubmit = () => {
+
+    // Realiza una búsqueda de vídeos según el término que se quiera buscar, se obtienen 12 vídeos
+    const handleOnClickSearch = () => {
       const input = document.getElementById("search");
+      // Realizo una petición get a la api de youtube (necesario registrarse y obtener una api key).
       axios
         .get(
           `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q=${input.value}&maxResults=12&key=AIzaSyBV_6gVqPQFrfIqy6pxwofR1tdqD7JDrs8`
@@ -42,6 +46,8 @@
           console.error(error);
         });
     };
+
+    // Genera los vídeos y los muestra en el html según la respuesta obtenida por la petición get a la api.
     const generateVideos = (data) => {
       const videos = document.getElementById("videos");
       videos.innerHTML = "";
@@ -66,6 +72,7 @@
       });
     };
 
+    // Guarda los datos del video que se ha visualizado a modo de historial, realizando una peticón post al servidor php.
     const openVideo = (data) => {
       $.ajax({
         type: "POST",
@@ -80,13 +87,15 @@
       });
     };
 
+    // Te envía a la ventana donde se muestra el historial de los vídeos visualizados.
     const handleOnClickRecord = () => {
       window.location.href = "record.html";
     };
 
-    const botonSubmit = document.getElementById("boton-submit");
-    botonSubmit.addEventListener("click", handleOnClickSubmit);
-    const botonRecord = document.getElementById("boton-record");
+    // Aquí agrego los eventos a los botones.
+    const botonSubmit = document.getElementById("button-search");
+    botonSubmit.addEventListener("click", handleOnClickSearch);
+    const botonRecord = document.getElementById("button-record");
     botonRecord.addEventListener("click", handleOnClickRecord);
   </script>
 </html>

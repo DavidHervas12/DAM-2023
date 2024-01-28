@@ -47,11 +47,6 @@ body {
   color: white;
 }
 
-span.size-100 {
-  font-size: 100px;
-  font-variation-settings: 'OPSZ' 48;
-}
-
 .container {
   display: flex;
   align-items: center;
@@ -61,7 +56,7 @@ span.size-100 {
   display: flex;
   justify-content: center;
   margin-top: 20px;
-  width: 90%;
+  width: 99%;
   /* background-color: rgba(3, 118, 250, 0.5); */
   /* box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); */
   flex-wrap: wrap;

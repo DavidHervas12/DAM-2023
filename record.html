@@ -3,42 +3,49 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link rel="stylesheet" href="style_record.css">
+    <title>Historial</title>
+    <link rel="stylesheet" href="style_record.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+      rel="stylesheet"
+    />
   </head>
   <body>
-    <button type="submit" id="boton-searcher">Volver</button>
-    <h1></h1>
-    <table id="table-record">
-    </table>
+    <button type="submit" id="button-back">
+      <span class="material-symbols-outlined size-48"> home </span>
+    </button>
+    <div id="table"></div>
   </body>
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script>
-    const obtenerDatos = () => {
+    
+    // Obtiene los datos de la base de datos para representarlos en la página web.
+    const getRecord = () => {
       fetch("server.php")
         .then((response) => response.json())
         .then((record) => {
           console.log(record);
-          const table = document.getElementById("table-record");
+          const table = document.getElementById("table");
           record.map((row, index) => {
-            const newRow = table.insertRow();
-            const thumbnailCell = newRow.insertCell(0);
-            const titleCell = newRow.insertCell(1);
-            const channelCell = newRow.insertCell(2);
-            const linkCell = newRow.insertCell(3);
-            const timestampCell = newRow.insertCell(4);
-
-            thumbnailCell.innerHTML = `<img src='${row.thumbnail}' />`;
-            titleCell.textContent = row.title;
-            channelCell.textContent = row.channel;
-            linkCell.textContent = row.link;
-            timestampCell.textContent = row.time_stamp;
+            const vid = document.createElement("div");
+            vid.classList.add("video");
+            vid.innerHTML = `<img src='${row.thumbnail}'><div class='video-info'><p><a href='${row.link}'>${row.title}</a><br>${row.channel}<br>${row.time_stamp}</p></div>`;
+            table.appendChild(vid);
           });
         })
         .catch((error) => console.error("Error:", error));
     };
 
-    window.onload = obtenerDatos();
+
+    window.onload = getRecord();
+
+    // Vuelve a la página de inicio.
+    const handleOnClickBack = () => {
+      window.location.href = "index.html";
+    };
+
+    const buttonBack = document.getElementById("button-back");
+    buttonBack.addEventListener("click", handleOnClickBack);
   </script>
 </html>
